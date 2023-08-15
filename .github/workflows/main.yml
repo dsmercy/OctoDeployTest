@@ -52,7 +52,7 @@ jobs:
         tags: dsmercy/octodeploy:feature-${{ steps.determine_version.outputs.semVer }}
         
     - name: Build and push master image
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/master'
       uses: docker/build-push-action@v2
       with:
         context: OctoDeploy
