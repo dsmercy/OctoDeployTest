@@ -80,7 +80,7 @@ jobs:
         packages: Deploy container to Kubernetes:randomquotes:feature-${{ steps.determine_version.outputs.semVer }}
       
     - name: Create Octopus Release for master branch
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/master'
       uses: OctopusDeploy/create-release-action@v1.1.1
       with:
         api_key: ${{ secrets.OCTOPUS_API_TOKEN }}
