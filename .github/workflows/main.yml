@@ -49,11 +49,11 @@ jobs:
       with:
         context: OctoDeploy
         push: true
-        tags: dsmercy/OctoDeploy:feature-${{ env.PACKAGE_VERSION }}
+        tags: dsmercy/octodeploy:feature-${{ env.PACKAGE_VERSION }}
         
     - name: Build and push master image
       if: github.ref == 'refs/heads/master'
-      run: docker push dsmercy/OctoDeploy:${{ env.PACKAGE_VERSION }}
+      run: docker push dsmercy/octodeploy:${{ env.PACKAGE_VERSION }}
 
   octopus-deploy:
     needs: dockerize
