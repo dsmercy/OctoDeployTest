@@ -35,7 +35,7 @@ jobs:
       run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').$GITHUB_RUN_NUMBER-prod" >> $GITHUB_ENV
       
     - name: Build and tag Docker image
-      run: docker build -t dsmercy/OctoDeployTest:${{ env.PACKAGE_VERSION }} .
+      run: docker build -t dsmercy/octodeploytest:${{ env.PACKAGE_VERSION }} .
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
@@ -49,11 +49,11 @@ jobs:
       with:
         context: OctoDeploy
         push: true
-        tags: dsmercy/octodeploy:feature-${{ env.PACKAGE_VERSION }}
+        tags: dsmercy/octodeploytest:feature-${{ env.PACKAGE_VERSION }}
         
     - name: Build and push master image
       if: github.ref == 'refs/heads/master'
-      run: docker push dsmercy/octodeploy:${{ env.PACKAGE_VERSION }}
+      run: docker push dsmercy/octodeploytest:${{ env.PACKAGE_VERSION }}
 
   octopus-deploy:
     needs: dockerize
