@@ -31,13 +31,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set package Version for master branch
-      if: github.ref == 'refs/heads/main'
-      run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').$GITHUB_RUN_NUMBER-prod" >> $GITHUB_ENV
-    - name: Set package Version for feature branch
-      if: contains(github.ref, 'feature')
-      run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').$GITHUB_RUN_NUMBER-dev" >> $GITHUB_ENV
-
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
 
@@ -56,7 +49,7 @@ jobs:
       with:
         context: OctoDeploy
         push: true
-        tags: dsmercy/octodeploy:feature-${{ env.PACKAGE_VERSION }}
+        tags: dsmercy/octodeploy:feature-$GITHUB_RUN_NUMBER
         
     - name: Build and push master image
       if: github.ref == 'refs/heads/master'
@@ -64,7 +57,7 @@ jobs:
       with:
         context: OctoDeploy
         push: true
-        tags: dsmercy/octodeploy:${{ env.PACKAGE_VERSION }}
+        tags: dsmercy/octodeploy:$GITHUB_RUN_NUMBER
 
   octopus-deploy:
     needs: dockerize
@@ -84,7 +77,7 @@ jobs:
         project: Random Quotes
         server: ${{ secrets.OCTOPUS_SERVER_URL }}
         deploy_to: Dev
-        packages: Deploy container to Kubernetes:randomquotes:feature-${{ env.PACKAGE_VERSION }}
+        packages: Deploy container to Kubernetes:randomquotes:feature-$GITHUB_RUN_NUMBER
       
     - name: Create Octopus Release for master branch
       if: github.ref == 'refs/heads/master'
@@ -94,4 +87,4 @@ jobs:
         project: Random Quotes
         server: ${{ secrets.OCTOPUS_SERVER_URL }}
         deploy_to: QA
-        packages: Deploy container to Kubernetes:randomquotes:${{ env.PACKAGE_VERSION }}
+        packages: Deploy container to Kubernetes:randomquotes:$GITHUB_RUN_NUMBER
