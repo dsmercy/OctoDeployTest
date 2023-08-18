@@ -53,7 +53,7 @@ jobs:
         
     - name: Build and push master image
       if: github.ref == 'refs/heads/master'
-      run: docker push dsmercy/octodeploytest:${{ env.PACKAGE_VERSION }}
+      run: docker push dsmercy/octodeploytest:${{ github.sha }}
 
   octopus-deploy:
     needs: dockerize
