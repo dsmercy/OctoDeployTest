@@ -32,7 +32,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Set package Version
-      run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').$GITHUB_RUN_NUMBER-prod" >> $GITHUB_ENV
+      run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}-prod" >> $GITHUB_ENV
       
     - name: Build and tag Docker image
       run: docker build -t dsmercy/octodeploytest:${{ env.PACKAGE_VERSION }} .
@@ -53,7 +53,11 @@ jobs:
         
     - name: Build and push master image
       if: github.ref == 'refs/heads/master'
-      run: docker push dsmercy/octodeploytest:${{ github.sha }}
+      uses: docker/build-push-action@v2
+      with:
+        context: OctoDeploy
+        push: true
+        tags: dsmercy/octodeploytest:master-${{ env.PACKAGE_VERSION }}
 
   octopus-deploy:
     needs: dockerize
