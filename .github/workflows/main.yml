@@ -28,6 +28,13 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: '0'
+    - name: Set up DotNET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
     - name: Set up Docker Buildx
@@ -37,13 +44,22 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_SAMPLES_USERNAME }}
         password: ${{ secrets.DOCKERHUB_SAMPLES_PASSWORD }}
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.14
+      with:
+        versionSpec: 5.x
+    - id: determine_version
+      name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0.9.14
+      with:
+        additionalArguments: /overrideconfig mode=Mainline
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
         context: OctoDeployTest
         push: true
-        tags: dsmercy/octodeploytest:${{ github.run_number }}
-
+        tags: dsmercy/octodeploy:${{ steps.determine_version.outputs.semVer }}
+        
   octopus-deploy:
     needs: dockerize
     runs-on: ubuntu-latest
