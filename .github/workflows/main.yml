@@ -35,7 +35,7 @@ jobs:
       run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}-prod" >> $GITHUB_ENV
       
     - name: Build and tag Docker image
-      run: docker build -t dsmercy/octodeploytest:${{ env.PACKAGE_VERSION }} .
+      run: docker build -t dsmercy/octodeploytest:${{ env.PACKAGE_VERSION }} -f OctoDeploy/Dockerfile .
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
